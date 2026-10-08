@@ -1,0 +1,137 @@
+/* Task 1 */
+
+.user-profile {
+    border: var(--boder);
+    border-radius: var(--border-radius);
+    padding: 16px;
+    margin-bottom: 8px;
+    overflow: hidden;
+}
+
+.user-profile h1 {
+    margin: 0 0 8px 0;
+    font-size: 24pt;
+}
+
+.user-profile h1 a {
+    color: var(--caption-color);
+}
+
+.user-profile ul {
+    margin: 0;
+    padding-left: 40px;
+}
+
+.user-avatar {
+    float: right;
+    width: 100px;
+    height: 100px;
+    margin-left: 16px;
+}
+
+.user-nav {
+    font-size: 24pt;
+}
+
+.user-nav .arrow {
+    text-decoration: none;
+    margin-right: 16px;
+}
+
+.user-nav .arrow.disabled {
+    color: var(--border-color);
+    cursor: default;
+}
+
+/* Task 2 */
+
+header nav ul li a.active {
+    text-decoration: underline;
+    text-decoration-thickness: 3px;
+    text-underline-offset: 3px;
+    text-decoration-color: var(--caption-color);
+}
+
+/* Task 4 */
+
+.datatable {
+    background: #e1e1e1;
+    border-radius: var(--border-radius) var(--border-radius) 0 0;
+}
+
+.datatable .caption {
+    padding: 4px 0 0 6px;
+}
+
+.datatable table {
+    background-color: white;
+    border: 1px solid #e1e1e1;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.datatable tbody tr:nth-child(2n-1) {
+    background-color: #f8f8f8;
+}
+
+.datatable td {
+    text-align: center;
+}
+
+.datatable td,th {
+    border: 1px solid #e1e1e1;
+    padding: 6px;
+}
+
+article {
+    margin-bottom: 36px;
+}
+
+article .title {
+    color: var(--caption-color);
+    font-size: 16pt;
+    font-weight: bold;
+    margin-bottom: 4px;
+}
+
+article .information{
+    color: #888;
+}
+
+article .body {
+    padding-left: 10px;
+    border-left: 4px solid var(--border-color);
+}
+
+article .body p:last-child {
+    margin-bottom: 10px;
+}
+
+/* Task 6 */
+
+a.userlink {
+    text-decoration: none;
+}
+
+a.userlink .userlink-handle {
+    font-weight: bold;
+}
+
+a.userlink .userlink-handle-red {
+    color: #cc0000
+}
+
+a.userlink .userlink-handle-green {
+    color: #00cc00
+}
+
+a.userlink .userlink-handle-blue {
+    color: #0000cc
+}
+
+a.userlink .userlink-name {
+    font-family: Georgia, "Times New Roman", Times, serif;
+    color: #333;
+    margin-left: 4px;
+    text-decoration: none;
+}

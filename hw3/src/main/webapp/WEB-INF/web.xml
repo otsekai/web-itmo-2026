@@ -5,6 +5,17 @@
                       http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
          version="4.0"
          metadata-complete="true">
+
+    <filter>
+        <filter-name>CaptchaFilter</filter-name>
+        <filter-class>ru.itmo.wp.servlet.CaptchaFilter</filter-class>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>CaptchaFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
     <filter>
         <filter-name>GzipFilter</filter-name>
         <filter-class>ru.itmo.wp.servlet.GzipFilter</filter-class>
@@ -27,5 +38,15 @@
         <url-pattern>*.css</url-pattern>
         <url-pattern>*.js</url-pattern>
         <url-pattern>*.html</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>MessageServlet</servlet-name>
+        <servlet-class>ru.itmo.wp.servlet.MessageServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>MessageServlet</servlet-name>
+        <url-pattern>/message/*</url-pattern>
     </servlet-mapping>
 </web-app>
