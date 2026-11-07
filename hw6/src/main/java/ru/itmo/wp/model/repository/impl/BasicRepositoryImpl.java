@@ -12,13 +12,13 @@ public abstract class BasicRepositoryImpl {
     protected final DataSource DATA_SOURCE = DatabaseUtils.getDataSource();
 
     @SuppressWarnings("SqlSourceToSinkFlow")
-    protected <T> T findOne(String sql, RowMapper<T> mapper, Object... args) {
+    protected <T> T executeQuery(String sql, Extractor<T> extractor, Object... args) {
         try (Connection connection = DATA_SOURCE.getConnection()) {
             try (PreparedStatement statement = connection.prepareStatement(sql)) {
                 setArgs(statement, args);
 
                 try (ResultSet resultSet = statement.executeQuery()) {
-                    return resultSet.next() ? mapper.map(resultSet) : null;
+                    return extractor.extract(resultSet);
                 }
             }
         } catch (SQLException e) {
@@ -26,24 +26,18 @@ public abstract class BasicRepositoryImpl {
         }
     }
 
-    @SuppressWarnings("SqlSourceToSinkFlow")
+    protected <T> T findOne(String sql, RowMapper<T> mapper, Object... args) {
+        return executeQuery(sql, rs -> rs.next() ? mapper.map(rs) : null, args);
+    }
+
     protected <T> List<T> findAll(String sql, RowMapper<T> mapper, Object... args) {
-        List<T> result = new ArrayList<>();
-        try (Connection connection = DATA_SOURCE.getConnection()) {
-            try (PreparedStatement statement = connection.prepareStatement(sql)) {
-                setArgs(statement, args);
-
-                try (ResultSet resultSet = statement.executeQuery()) {
-                    while (resultSet.next()) {
-                        result.add(mapper.map(resultSet));
-                    }
-                }
+        return executeQuery(sql, rs -> {
+            List<T> result = new ArrayList<>();
+            while (rs.next()) {
+                result.add(mapper.map(rs));
             }
-        } catch (SQLException e) {
-            throw new RepositoryException("Can't execute query: sql=[" + sql + "].", e);
-        }
-
-        return result;
+            return result;
+        }, args);
     }
 
     @SuppressWarnings("SqlSourceToSinkFlow")
@@ -81,7 +75,12 @@ public abstract class BasicRepositoryImpl {
     }
 
     @FunctionalInterface
-    protected interface  RowMapper<T> {
+    protected interface RowMapper<T> {
         T map(ResultSet resultSet) throws SQLException;
+    }
+
+    @FunctionalInterface
+    protected interface Extractor<T> {
+        T extract(ResultSet resultSet) throws SQLException;
     }
 }

@@ -7,17 +7,6 @@ import java.sql.*;
 import java.util.List;
 
 public class UserRepositoryImpl extends BasicRepositoryImpl implements UserRepository {
-    private User findBySmth(String[] argsName, Object... args) {
-        StringBuilder sql = new StringBuilder("SELECT * FROM User WHERE ");
-        for (int i = 0; i < argsName.length; i++) {
-            sql.append(argsName[i]).append("=? ");
-            if (i + 1 < argsName.length) {
-                sql.append("AND ");
-            }
-        }
-        return findOne(sql.toString(), this::toUser, args);
-    }
-
     @Override
     public User find(long id) {
         return findBySmth(new String[]{"id"}, id);
@@ -76,5 +65,16 @@ public class UserRepositoryImpl extends BasicRepositoryImpl implements UserRepos
         user.setCreationTime(resultSet.getTimestamp("creationTime"));
 
         return user;
+    }
+
+    private User findBySmth(String[] argsName, Object... args) {
+        StringBuilder sql = new StringBuilder("SELECT * FROM User WHERE ");
+        for (int i = 0; i < argsName.length; i++) {
+            sql.append(argsName[i]).append("=? ");
+            if (i + 1 < argsName.length) {
+                sql.append("AND ");
+            }
+        }
+        return findOne(sql.toString(), this::toUser, args);
     }
 }
