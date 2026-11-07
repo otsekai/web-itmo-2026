@@ -9,13 +9,16 @@ import ru.itmo.wp.model.repository.impl.UserRepositoryImpl;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.regex.Pattern;
 
 public class UserService {
     private static final String PASSWORD_SALT = "1174f9d7bc21e00e9a5fd0a783a44c9a9f73413c";
+    private static final String EMAIL_REGEX = "^[\\w-.]+@[\\w-]+(\\.[\\w-]+)*\\.[a-z]{2,}$";
+    private static final Pattern EMAIL_PATTERN = Pattern.compile(EMAIL_REGEX, Pattern.CASE_INSENSITIVE);
 
     private final UserRepository userRepository = new UserRepositoryImpl();
 
-    public void validateRegistration(User user, String password) throws ValidationException {
+    public void validateRegistration(User user, String password, String passwordConfirmation) throws ValidationException {
         if (Strings.isNullOrEmpty(user.getLogin())) {
             throw new ValidationException("Login is required");
         }
@@ -29,6 +32,19 @@ public class UserService {
             throw new ValidationException("Login is already in use");
         }
 
+        if (Strings.isNullOrEmpty(user.getEmail())) {
+            throw new ValidationException("Email is required");
+        }
+        if (!isEmail(user.getEmail())) {
+            throw new ValidationException("Email is not valid");
+        }
+        if (user.getEmail().length() > 28) {
+            throw new ValidationException("Email can't be longer than 28 characters");
+        }
+        if (userRepository.findByEmail(user.getEmail()) != null) {
+            throw new ValidationException("Email is already in use");
+        }
+
         if (Strings.isNullOrEmpty(password)) {
             throw new ValidationException("Password is required");
         }
@@ -37,6 +53,10 @@ public class UserService {
         }
         if (password.length() > 64) {
             throw new ValidationException("Password can't be longer than 64 characters");
+        }
+
+        if (!password.equals(passwordConfirmation)) {
+            throw new ValidationException("Passwords don't match");
         }
     }
 
@@ -52,14 +72,26 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public void validateEnter(String login, String password) throws ValidationException {
-        User user = userRepository.findByLoginAndPasswordSha(login, getPasswordSha(password));
+    public User validateEnter(String loginOrEmail, String password) throws ValidationException {
+        User user;
+        String passwordSha = getPasswordSha(password);
+        if (isEmail(loginOrEmail)) {
+            user = userRepository.findByEmailAndPasswordSha(loginOrEmail, passwordSha);
+        } else {
+            user = userRepository.findByLoginAndPasswordSha(loginOrEmail, passwordSha);
+        }
         if (user == null) {
             throw new ValidationException("Invalid login or password");
         }
+
+        return user;
     }
 
-    public User findByLoginAndPassword(String login, String password) {
-        return userRepository.findByLoginAndPasswordSha(login, getPasswordSha(password));
+    public int findCount() {
+        return userRepository.findCount();
+    }
+
+    private boolean isEmail(String email) {
+        return EMAIL_PATTERN.matcher(email).matches();
     }
 }

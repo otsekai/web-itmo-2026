@@ -1,5 +1,6 @@
 <#-- @ftlvariable name="user" type="ru.itmo.wp.model.domain.User" -->
 <#-- @ftlvariable name="message" type="java.lang.String" -->
+<#-- @ftlvariable name="userCount" type="int" -->
 <#macro page>
 <!DOCTYPE html>
 <html lang="en">
@@ -33,6 +34,7 @@
         <ul>
             <li><a href="/index">Home</a></li>
             <li><a href="/users">Users</a></li>
+            <li><a href="/talks">Talks</a></li>
         </ul>
     </nav>
 </header>
@@ -59,7 +61,7 @@
     </main>
 </div>
 <footer>
-    <a href="/index">Codeforces</a> &copy; 2022 by Mike Mirzayanov
+    <a href="/index">Codeforces</a> &copy; 2022 by Mike Mirzayanov (Количество пользователей: ${userCount})
 </footer>
 </body>
 </html>

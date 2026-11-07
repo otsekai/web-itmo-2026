@@ -6,6 +6,7 @@ import ru.itmo.wp.model.domain.User;
 import ru.itmo.wp.model.exception.ValidationException;
 import ru.itmo.wp.web.exception.NotFoundException;
 import ru.itmo.wp.web.exception.RedirectException;
+import ru.itmo.wp.web.page.BasePage;
 import ru.itmo.wp.web.page.IndexPage;
 import ru.itmo.wp.web.page.NotFoundPage;
 
@@ -144,7 +145,13 @@ public class FrontServlet extends HttpServlet {
         }
 
         Map<String, Object> view = new HashMap<>();
-        putUser(request, view);
+
+        try {
+            ((BasePage) page).before(request, view);
+        } catch (RedirectException e) {
+            response.sendRedirect(e.getLocation());
+            return;
+        }
 
         try {
             method.setAccessible(true);
@@ -172,6 +179,7 @@ public class FrontServlet extends HttpServlet {
                 throw new ServletException("Unable to run action [pageClass=" + pageClass + ", method=" + method + "].", e);
             }
         }
+        ((BasePage) page).after(request, view);
 
         Template template = newTemplate(pageClass.getSimpleName() + ".ftlh");
 
@@ -181,13 +189,6 @@ public class FrontServlet extends HttpServlet {
             template.process(view, response.getWriter());
         } catch (TemplateException e) {
             throw new ServletException("Can't render template [pageClass=" + pageClass + ", method=" + method + "].", e);
-        }
-    }
-
-    private void putUser(HttpServletRequest request, Map<String, Object> view) {
-        User user = (User) request.getSession().getAttribute("user");
-        if (user != null) {
-            view.put("user", user);
         }
     }
 

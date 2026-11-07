@@ -9,6 +9,7 @@
             <tr>
                 <th>Id</th>
                 <th>Login</th>
+                <th>Email</th>
                 <th>Created</th>
             </tr>
             </thead>
@@ -17,6 +18,7 @@
             <tr>
                 <td>${user.id}</td>
                 <td>${user.login}</td>
+                <td>${user.email}</td>
                 <td>${user.creationTime}</td>
             </tr>
             </#list>
