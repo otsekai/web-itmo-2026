@@ -1,0 +1,31 @@
+# Локальная БД для домашнего задания.
+# Запуск:      docker compose up -d
+# Остановка:   docker compose stop
+# Данные хранятся в томе db-data и сохраняются между запусками.
+# Не удаляйте этот том — задание сдаётся на ваших данных.
+services:
+  db:
+    image: mariadb:11.4
+    restart: unless-stopped
+    environment:
+      MARIADB_ROOT_PASSWORD: root
+      MARIADB_DATABASE: wp
+      MARIADB_USER: wp
+      MARIADB_PASSWORD: wp
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    ports:
+      - "3306:3306"     # если порт 3306 занят, замените на "3307:3306" и поправьте URL в profile.properties
+    volumes:
+      - db-data:/var/lib/mysql
+      - ./sql:/docker-entrypoint-initdb.d:ro   # sql/*.sql выполняются один раз — при создании пустой БД
+
+  adminer:              # веб-интерфейс к БД: http://localhost:8081
+    image: adminer
+    restart: unless-stopped
+    ports:
+      - "8081:8080"
+    depends_on:
+      - db
+
+volumes:
+  db-data:
