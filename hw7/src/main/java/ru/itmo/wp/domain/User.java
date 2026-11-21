@@ -25,6 +25,14 @@ public class User {
     @Pattern(regexp = "[a-z]+", message = "Only lowercase latin letters expected")
     private String login;
 
+    @NotNull
+    @Column(columnDefinition = "boolean default false")
+    private boolean disabled;
+
+    @NotNull
+    @Column(columnDefinition = "boolean default false")
+    private boolean admin;
+
     @CreationTimestamp
     private Date creationTime;
 
@@ -42,6 +50,22 @@ public class User {
 
     public void setLogin(String login) {
         this.login = login;
+    }
+
+    public boolean isDisabled() {
+        return disabled;
+    }
+
+    public void setDisabled(boolean disabled) {
+        this.disabled = disabled;
+    }
+
+    public boolean isAdmin() {
+        return admin;
+    }
+
+    public void setAdmin(boolean admin) {
+        this.admin = admin;
     }
 
     public Date getCreationTime() {

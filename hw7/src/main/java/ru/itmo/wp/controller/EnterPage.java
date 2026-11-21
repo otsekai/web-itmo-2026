@@ -25,7 +25,7 @@ public class EnterPage extends Page {
         this.userCredentialsEnterValidator = userCredentialsEnterValidator;
     }
 
-    @InitBinder
+    @InitBinder("enterForm")
     public void initBinder(WebDataBinder binder) {
         binder.addValidators(userCredentialsEnterValidator);
     }

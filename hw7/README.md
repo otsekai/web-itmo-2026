@@ -87,7 +87,7 @@ mvnw.cmd spring-boot:run      # Windows
   - `id`
   - `content` (используйте аннотацию `@Lob`)
   - `creationTime`
-- Заметка: `Notice` не имеет связи с `User` (пока без связей)
+- Заметка: `Notice` не имеет связи с `UserPage` (пока без связей)
 - Создайте:
   - `NoticeRepository`
   - `NoticeService`
